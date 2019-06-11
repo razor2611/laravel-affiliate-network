@@ -51,13 +51,7 @@ class Skimlinks extends AbstractNetwork implements NetworkInterface
             return false;
         }
         $this->_username = $username;
-
-        //<JC> Split public and private api key
-        $apis_key = explode("|", $password);
-        $public_key = str_replace("pub=", "", $apis_key[0]);
-        $private_key = str_replace("priv=", "", $apis_key[1]);
-
-        $this->_password = $private_key;
+        $this->_password = $password;
         $this->_idSite = $idSite;
 
         if (trim($idSite)!=''){
@@ -72,9 +66,12 @@ class Skimlinks extends AbstractNetwork implements NetworkInterface
 
         $credentials = array();
         $credentials["user"] = $this->_username;
-        $credentials["apikey"] = $public_key;
-        $credentials["private_apikey"] = $private_key;
-        $credentials["id_site"] = $idSite;
+        $credentials["password"] = $this->_password;
+        $credentials["publisher_id"] = $idSite;
+        
+        $credentials["cookiesDir"] = "test";
+        $credentials["cookiesSubDir"] = "skimlinks";
+        $credentials["cookieName"] = "skimlinks";
 
         $credentials['country'] = $this->_country;
         $this->_network->login($credentials);
@@ -108,14 +105,16 @@ class Skimlinks extends AbstractNetwork implements NetworkInterface
         }
         $arrResult = array();
 
-        $merchantList = $this->_network->getMerchantList();
+        $merchantList = $this->_network->getMerchantList();  
+          
         foreach($merchantList as $merchant) {
             $Merchant = Merchant::createInstance();
             $Merchant->merchant_ID = $merchant['id'];
             $Merchant->name = $merchant['name'];
+            $Merchant->url = $merchant['domains'];
             $arrResult[] = $Merchant;
         }
-
+        
         return $arrResult;
     }
 
