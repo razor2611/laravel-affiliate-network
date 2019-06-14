@@ -140,12 +140,13 @@ class VigLink extends AbstractNetwork implements NetworkInterface
         // TODO: Implement getProducts() method.
         throw new \Exception("Not implemented yet");
     }    
-    
+
+     
     /**
      * @return string
      */
     public function getTrackingParameter(){
         return $this->_tracking_parameter;
     }    
-    
+   
 }
